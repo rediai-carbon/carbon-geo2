@@ -20,7 +20,15 @@ target_sources(geo2 PRIVATE
     ${SRC_FILES}
 )
 
-set_target_properties(geo2 PROPERTIES OUTPUT_NAME "_geo2")
+set_target_properties(geo2 PROPERTIES
+    OUTPUT_NAME "_geo2"
+    # vcpkg's build-tree RPATH records the absolute dependency directory and
+    # an empty component. The installed extension sits beside libpython.
+    SKIP_BUILD_RPATH TRUE
+    BUILD_WITH_INSTALL_RPATH TRUE
+    INSTALL_RPATH "\$ORIGIN"
+    INSTALL_RPATH_USE_LINK_PATH FALSE
+)
 
 
 if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
