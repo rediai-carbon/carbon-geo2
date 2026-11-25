@@ -384,9 +384,8 @@ static PyNumberMethods VectorD_as_number = {
 	nullptr, /* nb_and */
 	nullptr, /* nb_xor */
 	nullptr, /* nb_or */
-	nullptr, /* nb_coerce */
 	nullptr, /* nb_int */
-	nullptr, /* nb_unused */
+	nullptr, /* nb_reserved, formerly known as nb_long */
 	nullptr, /* nb_float */
 	nullptr, /* nb_inplace_add */
 	nullptr, /* nb_inplace_subtract */
