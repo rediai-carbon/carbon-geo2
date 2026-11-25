@@ -18,7 +18,9 @@ def main():
     close(added, (5.0, 7.0, 9.0), "Vec3Add")
 
     dot = _geo2.Vec3Dot((1.0, 0.0, 0.0), (0.0, 1.0, 0.0))
-    close(dot, (0.0,), "Vec3Dot")
+    dot_value = float(dot if isinstance(dot, (int, float)) else dot[0])
+    if abs(dot_value) > 1.0e-5:
+        raise SystemExit(f"Vec3Dot {dot}")
 
     identity = _geo2.QuaternionIdentity()
     close(identity, (0.0, 0.0, 0.0, 1.0), "QuaternionIdentity")
@@ -39,7 +41,7 @@ def main():
     print(
         "GEO2_CONSUMER "
         f"add={tuple(float(v) for v in added)} "
-        f"dot={float(dot[0])} "
+        f"dot={dot_value} "
         f"quat={tuple(float(v) for v in identity)} "
         f"matrix={len(matrix)} "
         f"invalid={invalid} "
