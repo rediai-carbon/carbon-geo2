@@ -1,0 +1,32 @@
+name: linux-geo2-blue-vector
+
+on:
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: linux-geo2-blue-vector-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  script-contract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+      - name: Validate integration scripts
+        run: |
+          bash -n scripts/ci/geo2_port_install_from_registry.sh
+          bash -n scripts/ci/linux_blue_vector_suite.sh
+          test -f examples/installed_consumer.py
+          test -f python/geo2/test/test_geo2Vector3.py
+
+  # Full Blue + registry install requires Fenris build volumes (fe-linux-fresh).
+  # Run locally or on the Fenris host:
+  #   docker run ... carbon-linux-gcc-buildenv:fe1 bash -lc \
+  #     'export FENRIS_VCPKG_ROOT=/work/vcpkg FENRIS_REGISTRY_ROOT=/reg GEO2_REPO_ROOT=/src; \
+  #      bash /src/scripts/ci/linux_blue_vector_suite.sh'
