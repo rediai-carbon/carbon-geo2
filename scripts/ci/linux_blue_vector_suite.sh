@@ -12,6 +12,8 @@ mkdir -p "$STAGE/lib"
 install -m 0644 "$GEO2_SO" "$STAGE/lib/_geo2.so"
 if [ "${FENRIS_GEO2_INSTALL_IN_BLUE_PREFIX:-0}" = "1" ]; then
   install -m 0644 "$GEO2_SO" "$BLUE_PREFIX/lib/_geo2.so"
+else
+  rm -f "$BLUE_PREFIX/lib/_geo2.so"
 fi
 export LD_LIBRARY_PATH="$BUILD:$BLUE_PREFIX/lib:$STAGE/lib"
 export PYTHONPATH="$BUILD:$BLUE_PREFIX/lib:$BLUE_PREFIX/bin:$BLUE_PREFIX/bin/python:$BLUE_PREFIX/lib/python3.12:${STAGE}/lib:${GEO2_REPO_ROOT}/python"
@@ -20,7 +22,7 @@ cp -f "$BLUE_PREFIX/tools/carbon-exefile/exefile" "$BUILD/exefile"
 import sys, blue, geo2, importlib.util
 spec = importlib.util.find_spec("_geo2")
 assert spec and spec.origin
-assert "fenris-geo2-blue-stage" in spec.origin or "build-registry" in spec.origin
+assert "fenris-geo2-blue-stage" in spec.origin, f"unexpected _geo2 origin {spec.origin!r}"
 v = geo2.VectorD(1.0, 2.0, 3.0)
 assert tuple(v / 2.0) == (0.5, 1.0, 1.5)
 libpy = {line.split()[-1] for line in open("/proc/self/maps") if "libpython" in line}
