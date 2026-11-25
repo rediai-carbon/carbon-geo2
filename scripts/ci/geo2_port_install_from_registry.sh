@@ -40,7 +40,11 @@ cat > /tmp/geo2-port/vcpkg-configuration.json <<EOF
   ]
 }
 EOF
-echo 'cmake_minimum_required(VERSION 3.16); project(geo2_port_consumer LANGUAGES CXX); find_package(carbon-geo2 CONFIG REQUIRED)' > /tmp/geo2-port/CMakeLists.txt
+cat > /tmp/geo2-port/CMakeLists.txt <<'CMAKE'
+cmake_minimum_required(VERSION 3.16)
+project(geo2_port_consumer LANGUAGES CXX)
+find_package(carbon-geo2 CONFIG REQUIRED)
+CMAKE
 CMAKE_EXTRA=()
 if [ -n "$OVERLAY_PORTS" ]; then
   CMAKE_EXTRA+=("-DVCPKG_OVERLAY_PORTS=${OVERLAY_PORTS}")
