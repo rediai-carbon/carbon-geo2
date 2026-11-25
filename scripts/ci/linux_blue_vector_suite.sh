@@ -15,6 +15,7 @@ cleanup() {
 trap cleanup EXIT
 
 bash "$SCRIPT_DIR/geo2_port_install_from_registry.sh"
+export FENRIS_GEO2_INSTALL_PREFIX="${FENRIS_GEO2_INSTALL_PREFIX:-$FENRIS_GEO2_WORK_ROOT/build/vcpkg_installed/x64-linux-release}"
 BLUE_PREFIX="${FENRIS_BLUE_PREFIX:-/work/build-registry/vcpkg_installed/x64-linux-release}"
 BUILD="${FENRIS_BLUE_BUILD:-/work/build-registry}"
 EXEFILE="${FENRIS_EXEFILE:-$BLUE_PREFIX/tools/carbon-exefile/exefile}"
