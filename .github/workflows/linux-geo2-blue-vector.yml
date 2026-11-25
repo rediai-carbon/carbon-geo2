@@ -13,20 +13,25 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  script-contract:
+  shell-syntax-only:
+    name: Shell syntax only (not functional Geo2/Blue proof)
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
-      - name: Validate integration scripts
+      - name: Validate script syntax and pin file
         run: |
           bash -n scripts/ci/geo2_port_install_from_registry.sh
           bash -n scripts/ci/linux_blue_vector_suite.sh
+          bash -n scripts/ci/fenris_registry_pins.sh
+          source scripts/ci/fenris_registry_pins.sh
+          test -n "$GEO2_REGISTRY_SHA_DEFAULT"
+          test -n "$GEO2_SOURCE_REF_DEFAULT"
+          grep -q '19c5ea9' scripts/ci/fenris_registry_pins.sh
+          grep -q '72d8992' scripts/ci/fenris_registry_pins.sh
           test -f examples/installed_consumer.py
           test -f python/geo2/test/test_geo2Vector3.py
-
-  # Full Blue + registry install requires Fenris build volumes (fe-linux-fresh).
-  # Run locally or on the Fenris host:
-  #   docker run ... carbon-linux-gcc-buildenv:fe1 bash -lc \
-  #     'export FENRIS_VCPKG_ROOT=/work/vcpkg FENRIS_REGISTRY_ROOT=/reg GEO2_REPO_ROOT=/src; \
-  #      bash /src/scripts/ci/linux_blue_vector_suite.sh'
+      - name: Hosted CI limitation
+        run: |
+          echo "Full registry install + Blue vector suite requires Fenris fe-linux-fresh."
+          echo "Run scripts/ci/linux_blue_vector_suite.sh inside carbon-linux-gcc-buildenv:fe1."
